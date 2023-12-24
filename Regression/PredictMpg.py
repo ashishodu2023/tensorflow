@@ -86,7 +86,7 @@ class FuelRegression(BaseModel):
 
 
 def main():
-    URL ='./auto-mpg'
+    URL ='./Regression/data/auto-mpg'
     flr = FuelRegression(200,'adam','mean_squared_error',1)
     data = flr.load_data(URL)
     print('=====================Fuel Price Dataset===============')
