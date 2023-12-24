@@ -1,73 +1,90 @@
-import tensorflow as tf 
-import numpy as np 
+import tensorflow as tf
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from tensorflow.keras.layers import Dense, Flatten
 from tensorflow import keras
+from BaseModel import BaseModel
+import seaborn as sns
+from utils import PlotDigits 
+import warnings
+warnings.filterwarnings('ignore')
 
 # Network and training parameters
-EPOCHS = 200
-BATCH_SIZE  = 128
-VERBOSE = 1
-NB_CLASSES = 10
-N_HIDDEN = 128
-VALIDATION_SPLIT = 0.2
-RESHAPED = 784
-DROP_OUT = 0.3
-
-mnist = keras.datasets.mnist
-(x_train,y_train),(x_test,y_test) = mnist.load_data()
-
-x_train = x_train.reshape(60000,RESHAPED).astype('float32')
-x_test = x_test.reshape(10000,RESHAPED).astype('float32')
-
-# Normalize the data
-x_train /=255
-x_test /=255
-
-#print(x_train.shape[0],'train_samples')
-#print(x_test.shape[0],'test_samples')
-
-y_train = tf.keras.utils.to_categorical(y_train,NB_CLASSES)
-y_test = tf.keras.utils.to_categorical(y_test,NB_CLASSES)
-
-# Build model
-model = tf.keras.models.Sequential()
-model.add(
-    keras.layers.Dense(
-        N_HIDDEN,
-        input_shape = (RESHAPED,),
-        name ='dense_layer_1',
-        activation='relu'
-    )
-)
-model.add(keras.layers.Dropout(DROP_OUT))
-model.add(
-    keras.layers.Dense(
-        N_HIDDEN,
-        input_shape = (RESHAPED,),
-        name ='dense_layer_2',
-        activation='relu'
-    )
-)
-model.add(keras.layers.Dropout(DROP_OUT))
-model.add(
-    keras.layers.Dense(
-        NB_CLASSES,
-        input_shape = (RESHAPED,),
-        name ='dense_layer_3',
-        activation='softmax'
-    )
-)
-
-#Compiling the model
-#model.compile(optimizer='SGD',loss='categorical_crossentropy', metrics=['accuracy'])
-#model.compile(optimizer='RMSProp',loss='categorical_crossentropy', metrics=['accuracy']) #0.9771
-model.compile(optimizer='Adam',loss='categorical_crossentropy', metrics=['accuracy']) #0.9807
-
-print(model.summary())
-
-#Traning the model
-model.fit(x_train,y_train,batch_size=BATCH_SIZE,epochs=EPOCHS,verbose=VERBOSE,validation_split=VALIDATION_SPLIT)
 
 
-#Evaluate the model
-test_loss,test_acc = model.evaluate(x_test,y_test)
-print('Test Accuracy:', test_acc)
+class Configuration:
+    EPOCHS = 50
+    VERBOSE = 1
+    OPTIMIZER = 'adam'
+    METRICS = 'accuracy'
+    LOSS = 'sparse_categorical_crossentropy'
+
+
+class HandWritingClassification(BaseModel):
+
+    def __init__(self):
+        self.model = None
+
+    def load_data(self):
+        mnist = keras.datasets.mnist
+        (x_train, y_train), (x_test, y_test) = mnist.load_data()
+        return (x_train, y_train), (x_test, y_test)
+
+    def preprocess(self, x_train, y_train, x_test, y_test):
+        # Normalize the data
+        x_train = x_train/np.float32(255)
+        y_train = y_train.astype(np.int32)
+        x_test = x_test/np.float32(255)
+        y_test = y_test.astype(np.int32)
+        return x_train, y_train, x_test, y_test
+
+    def build_model(self):
+        self.model = tf.keras.Sequential([
+            Flatten(input_shape=(28, 28)),
+            Dense(10, activation='sigmoid')
+        ])
+        self.model.compile(optimizer=Configuration.OPTIMIZER,
+                           loss=Configuration.LOSS, metrics=[Configuration.METRICS])
+        return self.model
+
+    def train_model(self, model,train_features, train_label):
+        self.history = model.fit(
+            train_features, train_label, epochs=Configuration.EPOCHS, verbose=Configuration.VERBOSE, validation_split=0.2)
+        return self.history
+
+    def plot_loss(self, history):
+        plt.plot(history.history['loss'], label='loss')
+        plt.plot(history.history['val_loss'], label='val_loss')
+        plt.xlabel('Epoch')
+        plt.ylabel('Loss')
+        plt.legend()
+        plt.grid(True)
+        plt.show()
+
+    def predictions(self,model,x_test):
+        self.y_pred = model.predict(x_test)
+        self.number = 56
+        plt.figure(figsize=(10,5))
+        plt.subplot(1,2,1)
+        
+
+
+def main():
+    hwc = HandWritingClassification()
+    (x_train, y_train), (x_test, y_test) = hwc.load_data()
+    print("================The shape of the input data=====================")
+    print(x_train.shape, x_test.shape)
+    x_train, y_train, x_test, y_test=hwc.preprocess(x_train, y_train,x_test, y_test)
+    print("==========Sample Preprocessed=======================")
+    print(y_train[0],y_test[0])
+    model = hwc.build_model()
+    print("==================Model Summary====================")
+    print(model.summary())
+    print("=================Taining Model=====================")
+    history =hwc.train_model(model,x_train,y_train)
+    hwc.plot_loss(history)
+
+
+if __name__ == '__main__':
+    main()
