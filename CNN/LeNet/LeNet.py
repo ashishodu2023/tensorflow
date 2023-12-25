@@ -1,5 +1,5 @@
 import tensorflow as tf
-from CNN.BaseModel import BaseModel
+from CNN.LeNet.BaseModel import BaseModel
 import matplotlib.pyplot as plt
 
 
@@ -77,7 +77,7 @@ class HandDigitsCNN(BaseModel):
 
     def train_model(self, train_features, train_label):
         self.callbacks = [
-            tf.keras.callbacks.TensorBoard(log_dir='./logs')
+            tf.keras.callbacks.TensorBoard(log_dir='logs')
         ]
         self.history = self.model.fit(train_features, train_label, epochs=Configuration.EPOCHS,
                                       verbose=Configuration.VERBOSE, validation_split=Configuration.VALIDATION_SPLIT,

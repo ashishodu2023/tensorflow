@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras.layers import Dense, Flatten
 from tensorflow import keras
-from CNN.BaseModel import BaseModel
+from CNN.LeNet.BaseModel import BaseModel
 from utils import PlotDigits
 import warnings
 warnings.filterwarnings('ignore')
