@@ -9,6 +9,7 @@ class PlotDigits:
         self.number = number
         self.prediction_array = prediction_array
         self.y_true = y_true
+        
 
     def plot_images(self,images):
         self.y_true, self.images = self.y_true[self.number], images[self.number]
@@ -17,14 +18,13 @@ class PlotDigits:
         plt.yticks([])
         plt.imshow(self.images, cmap=plt.cm.binary)
 
-        self.y_pred = np.argmax(self.preidction_array)
-        if self.y_pred == self.y_train:
+        self.y_pred = np.argmax(self.prediction_array)
+        if self.y_pred == self.y_true:
             self.color = 'blue'
         else:
             self.color = 'red'
 
-        plt.xlabel("Pred {} Conf: {:2.0f}% True ({})".format(self.y_pred, 
-        100*np.max(preidction_array), self.y_true, color=color))
+        plt.xlabel("Pred {} Conf: {:2.0f}% True ({})".format(self.y_pred, 100*np.max(self.prediction_array), self.y_true, color=self.color))
 
     def plot_value_array(self):
         self.y_true = self.y_true[self.number]

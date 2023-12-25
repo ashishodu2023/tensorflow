@@ -62,11 +62,16 @@ class HandWritingClassification(BaseModel):
         plt.grid(True)
         plt.show()
 
-    def predictions(self,model,x_test):
+    def predictions(self,model,x_test,y_test):
         self.y_pred = model.predict(x_test)
         self.number = 56
         plt.figure(figsize=(10,5))
         plt.subplot(1,2,1)
+        pd = PlotDigits.PlotDigits(self.number,self.y_pred[self.number],y_test)
+        pd.plot_images(x_test)
+        plt.subplot(1,2,1)
+        pd.plot_value_array()
+        plt.show()
         
 
 
@@ -84,6 +89,7 @@ def main():
     print("=================Taining Model=====================")
     history =hwc.train_model(model,x_train,y_train)
     hwc.plot_loss(history)
+    hwc.predictions(model,x_test,y_test)
 
 
 if __name__ == '__main__':
