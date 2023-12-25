@@ -13,7 +13,8 @@ def main():
     print("==============Training Model=====================")
     history = cnn.train_model(x_train,y_train)
     plot_loss(history)
-
+    print("==============Predictions========================")
+    cnn.predictions(model,x_test,y_test)
 
 
 if __name__ == '__main__':

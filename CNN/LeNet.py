@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 class Configuration:
-    EPOCHS = 5
+    EPOCHS = 20
     BATCH_SIZE = 128
     VERBOSE = 1
     OPTIMIZER = tf.keras.optimizers.Adam()
@@ -32,6 +32,7 @@ def plot_loss(history):
 
 class HandDigitsCNN(BaseModel):
     def __init__(self):
+        self.score = None
         self.callbacks = None
         self.history = None
         self.model = None
@@ -82,3 +83,9 @@ class HandDigitsCNN(BaseModel):
                                       verbose=Configuration.VERBOSE, validation_split=Configuration.VALIDATION_SPLIT,
                                       callbacks=self.callbacks)
         return self.history
+
+    def predictions(self,model,x_test,y_test):
+        self.score = model.evaluate(x_test,y_test,verbose=Configuration.VERBOSE)
+        print("\n Test Score:",self.score[0])
+        print("\n Test Accuracy:",self.score[1])
+

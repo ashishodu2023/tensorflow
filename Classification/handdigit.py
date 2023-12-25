@@ -1,12 +1,10 @@
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
 from tensorflow.keras.layers import Dense, Flatten
 from tensorflow import keras
-from BaseModel import BaseModel
-import seaborn as sns
-from utils import PlotDigits 
+from CNN.BaseModel import BaseModel
+from utils import PlotDigits
 import warnings
 warnings.filterwarnings('ignore')
 
