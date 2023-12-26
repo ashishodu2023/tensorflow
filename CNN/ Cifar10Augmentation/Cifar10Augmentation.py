@@ -102,7 +102,6 @@ class Cifar10AugmentationCNN(BaseModel):
         # Dense
         self.model.add(tf.keras.layers.Flatten())
         self.model.add(tf.keras.layers.Dense(Configuration.NB_CLASSES, activation=Configuration.SOFTMAX))
-        # self.model.build(input_shape=input_shape)
         self.model.compile(loss=Configuration.LOSS, optimizer=Configuration.OPTIMIZER, metrics=[Configuration.METRICS])
         return self.model
 
@@ -111,13 +110,13 @@ class Cifar10AugmentationCNN(BaseModel):
             rotation_range=30,
             width_shift_range=0.2,
             height_shift_range=0.2,
-            horizotal_flip=True
+            horizontal_flip=True
         )
-        self.history = self.model.fit_generator(
-            self.datagen(train_features, train_label, batch_size=Configuration.BATCH_SIZE,
+        self.history = self.model.fit(
+            self.datagen.flow(train_features, train_label, batch_size=Configuration.BATCH_SIZE),
                          epochs=Configuration.EPOCHS,
                          verbose=Configuration.VERBOSE, validation_data=(test_features, test_label)
-                         ))
+                         )
         return self.history
 
     def predictions(self, model, x_test, y_test):
