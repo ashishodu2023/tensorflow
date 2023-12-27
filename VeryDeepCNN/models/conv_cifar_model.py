@@ -1,6 +1,6 @@
 from base.base_model import BaseModel
 from keras.models import Model
-from keras.layers import Input, Dense, Conv2D, MaxPooling2D, Dropout, Flatten, ZeroPadding2D, Convolution2D
+from keras.layers import Input, Dense, MaxPooling2D, Dropout, Flatten, ZeroPadding2D, Convolution2D
 
 
 class ConvCifarModel(BaseModel):
@@ -14,7 +14,7 @@ class ConvCifarModel(BaseModel):
 
     def build_model(self):
         self.input_layer = Input(shape=(224, 224, 3))
-        Vzero_1 = ZeroPadding2D((1, 1))(self.input_layer)
+        zero_1 = ZeroPadding2D((1, 1))(self.input_layer)
         conv_1 = Convolution2D(64, (3, 3), activation='relu')(zero_1)
         zero_2 = ZeroPadding2D((1, 1))(conv_1)
         conv_2 = Convolution2D(64, (3, 3), activation='relu')(zero_2)
