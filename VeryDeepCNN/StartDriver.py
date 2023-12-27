@@ -16,13 +16,13 @@ def main():
         create_dirs([config.callbacks.tensorboard_log_dir, config.callbacks.checkpoint_dir])
 
         print('Create the data generator.')
-        data_loader = factory.create("data_loader." + config.data_loader.name)(config)
+        data_loader = factory.generate("data_loader." + config.data_loader.name)(config)
 
         print('Create the model.')
-        model = factory.create("models." + config.model.name)(config)
+        model = factory.generate("models." + config.model.name)(config)
 
         print('Create the trainer')
-        trainer = factory.create("trainers." + config.trainer.name)(model.model, data_loader.get_test_data(), config)
+        trainer = factory.generate("trainers." + config.trainer.name)(model.model, data_loader.get_train_data(), config)
 
         print('Start training the model.')
         trainer.train()
