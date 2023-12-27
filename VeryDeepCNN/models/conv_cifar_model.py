@@ -35,6 +35,6 @@ class ConvCifarModel(BaseModel):
         self.model = Model(inputs=self.input_layer, outputs=self.output_layer)
 
         self.model.compile(
-              loss='sparse_categorical_crossentropy',
+              loss='categorical_crossentropy',
               optimizer=self.config.model.optimizer,
               metrics=['accuracy'])

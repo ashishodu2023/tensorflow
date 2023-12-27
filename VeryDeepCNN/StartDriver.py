@@ -18,11 +18,15 @@ def main():
         print('Create the data generator.')
         data_loader = factory.generate("data_loader." + config.data_loader.name)(config)
 
+        print('Create the Preprocess')
+        preprocess = factory.generate("preprocess." + config.preprocess.name)(data_loader.get_train_data(),config)
+
         print('Create the model.')
         model = factory.generate("models." + config.model.name)(config)
 
         print('Create the trainer')
-        trainer = factory.generate("trainers." + config.trainer.name)(model.model, data_loader.get_train_data(), config)
+        trainer = factory.generate("trainers." + config.trainer.name)(model.model,
+                                                                      preprocess.get_normalized_train_data(), config)
 
         print('Start training the model.')
         trainer.train()

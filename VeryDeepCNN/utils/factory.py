@@ -1,7 +1,7 @@
 import importlib
 
 
-def create(cls):
+def generate(cls):
     '''expects a string that can be imported as with a module.class name'''
     module_name, class_name = cls.rsplit(".", 1)
 
