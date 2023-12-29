@@ -19,13 +19,13 @@ class Text8Embedding:
         self.model = Word2Vec(self.__get_data())
 
     def save_model(self):
-        model_dir = 'WordEmbedding/data'
+        model_dir = 'data'
         os.makedirs(model_dir, exist_ok=True)
         model_path = os.path.join(model_dir, self.model_name)
         self.model.save(model_path)
 
     def load_model(self):
-        model_path = os.path.join('WordEmbedding/data', self.model_name)
+        model_path = os.path.join('data', self.model_name)
         if os.path.isfile(model_path):
             self.model = KeyedVectors.load(model_path)
         else:
