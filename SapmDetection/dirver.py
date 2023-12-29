@@ -1,6 +1,6 @@
-from utils.command_parser import CommandParser
-from utils.config_reader import ConfigReader
-from utils.logger_config import Logger
+from SapmDetection.utils.command_parser import CommandParser
+from SapmDetection.utils.config_reader import ConfigReader
+from SapmDetection.utils.logger_config import Logger
 
 
 class Driver:

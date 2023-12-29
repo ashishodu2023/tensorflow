@@ -37,8 +37,22 @@ class Text8Embedding:
 
     @staticmethod
     def show_embeddings(words, num_words=10):
+        print('\n*************Word Embeddings****************')
         print(words[:num_words])
         assert 'king' in words
+
+    def get_model_vector(self):
+        return self.model.wv
+
+    @staticmethod
+    def print_most_similar(word_conf_pairs, k):
+        print('\n*************Similar Words****************')
+        for i, (word, conf) in enumerate(word_conf_pairs):
+            print(f'{conf :.3f} {word}')
+            if i >= k - 1:
+                break
+        if k < len(word_conf_pairs):
+            print('...')
 
     def main(self):
         text8 = Text8Embedding()
@@ -46,7 +60,9 @@ class Text8Embedding:
         text8.save_model()
         text8.load_model()
         words = text8.explore_embeddings()
+        word_vector = text8.get_model_vector()
         text8.show_embeddings(words, num_words=10)
+        text8.print_most_similar(word_vector.most_similar('king'), 5)
 
 
 if __name__ == '__main__':

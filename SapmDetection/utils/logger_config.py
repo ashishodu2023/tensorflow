@@ -38,5 +38,5 @@ class Logger:
 
             return logger
         except Exception as e:
-            print(f'Error occured while settting up the logger: {e}')
+            print(f'Error occurred while setting up the logger: {e}')
             raise
