@@ -35,10 +35,10 @@ class Driver:
 
             self.config_reader = ConfigReader(self.logger)
             self.config_reader.read_config_file(self.args.config)
-            if (self.args.data == 'get-data' #and self.args.preprocess == 'pre-process'
+            if (self.args.data == 'get-data'  # and self.args.preprocess == 'pre-process'
                     and self.args.split == 'split-data'):
                 self.download_data()
-                #self.preprocess_data()
+                # self.preprocess_data()
                 self.train_test_split()
         except Exception as e:
             self.logger.exception('An error occurred')
@@ -51,14 +51,6 @@ class Driver:
         except Exception as e:
             self.logger.exception(f'Error occurred at creating sms download object. Reason:{e}')
             raise
-
-    # def preprocess_data(self):
-    #     try:
-    #         self.preprocess = PreProcess(self.logger, self.config_reader, self.texts, self.labels)
-    #         self.preprocess.tokenize_data()
-    #     except Exception as e:
-    #         self.logger.exception(f'Error occurred at preprocessing the data. Reason:{e}')
-    #         raise
 
     def train_test_split(self):
         try:
