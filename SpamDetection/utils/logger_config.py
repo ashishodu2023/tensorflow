@@ -14,7 +14,7 @@ class Logger:
             logger.setLevel(logging.INFO)
 
             # Create log formatter
-            log_format = '%(asctime)s :%(name)s : %(linno)d :%(levelname)s :%(message)s'
+            log_format = '%(asctime)s :%(name)s : %(lineno)d :%(levelname)s :%(message)s'
             formatter = logging.Formatter(log_format)
 
             # Create the console handler and set the formatter
