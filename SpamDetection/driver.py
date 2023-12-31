@@ -3,10 +3,14 @@ from utils.config_reader import ConfigReader
 from utils.logger_config import Logger
 from data.get_sms_data import GetSmsData
 from preprocess.preprocess_data import PreProcess
+from model.model_train import SpamClassifierTrainer
 
 
 class Driver:
     def __init__(self):
+        self.test_dataset = None
+        self.val_dataset = None
+        self.train_dataset = None
         self.labels = None
         self.texts = None
         self.logger = None
@@ -35,11 +39,11 @@ class Driver:
 
             self.config_reader = ConfigReader(self.logger)
             self.config_reader.read_config_file(self.args.config)
-            if (self.args.data == 'get-data'  # and self.args.preprocess == 'pre-process'
-                    and self.args.split == 'split-data'):
+            if (self.args.data == 'get-data'
+                    and self.args.split == 'split-data' and self.args.compiile == 'compile-model'):
                 self.download_data()
-                # self.preprocess_data()
                 self.train_test_split()
+                self.model_build_and_train()
         except Exception as e:
             self.logger.exception('An error occurred')
             raise
@@ -55,10 +59,17 @@ class Driver:
     def train_test_split(self):
         try:
             self.preprocess = PreProcess(self.logger, self.config_reader, self.texts, self.labels)
-            self.preprocess.train_test_split()
+            self.train_dataset,self.val_dataset, self.test_dataset=self.preprocess.train_test_split()
         except Exception as e:
             self.logger.exception(f'Error occurred at preprocessing the data. Reason:{e}')
             raise
+
+    def model_build_and_train(self):
+        self.model_compile = SpamClassifierTrainer()
+        self.model_compile.build_model()
+        self.model=self.model_compile()
+
+
 
 
 if __name__ == '__main__':

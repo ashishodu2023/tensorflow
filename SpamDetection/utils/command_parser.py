@@ -15,6 +15,7 @@ class CommandParser(object):
         self.parser.add_argument('-d', '--data', help='Download Sms spam ', required=False)
         self.parser.add_argument('-p', '--preprocess', help='Preprocess the text data', required=False)
         self.parser.add_argument('-s', '--split', help='Split data into train,test and val', required=False)
+        self.parser.add_argument('-m', '--model', help='Build and Compile Model', required=False)
         self.args = self.parser.parse_args()
 
     def parse_args(self):
