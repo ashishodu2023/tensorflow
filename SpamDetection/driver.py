@@ -3,7 +3,7 @@ from utils.config_reader import ConfigReader
 from utils.logger_config import Logger
 from data.get_sms_data import GetSmsData
 from preprocess.preprocess_data import PreProcess
-from model.model_train import SpamClassifierTrainer
+from model.model_train_test import SpamClassifierTrainer
 
 
 class Driver:
@@ -75,6 +75,8 @@ class Driver:
                                                   'scratch', e)
             model_compile.build_model()
             self.model = model_compile.compile_model()
+            model_compile.train_model(self.train_dataset, self.val_dataset)
+            model_compile.test_model(self.test_dataset)
         except Exception as e:
             self.logger.exception(f'Error occurred at building the mode. Reason:{e}')
             raise
