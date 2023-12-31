@@ -8,6 +8,7 @@ from model.model_train import SpamClassifierTrainer
 
 class Driver:
     def __init__(self):
+        self.model = None
         self.test_dataset = None
         self.val_dataset = None
         self.train_dataset = None
@@ -40,7 +41,7 @@ class Driver:
             self.config_reader = ConfigReader(self.logger)
             self.config_reader.read_config_file(self.args.config)
             if (self.args.data == 'get-data'
-                    and self.args.split == 'split-data' and self.args.compiile == 'compile-model'):
+                    and self.args.split == 'split-data' and self.args.model == 'compile-model'):
                 self.download_data()
                 self.train_test_split()
                 self.model_build_and_train()
@@ -59,17 +60,24 @@ class Driver:
     def train_test_split(self):
         try:
             self.preprocess = PreProcess(self.logger, self.config_reader, self.texts, self.labels)
-            self.train_dataset,self.val_dataset, self.test_dataset=self.preprocess.train_test_split()
+            self.train_dataset, self.val_dataset, self.test_dataset = self.preprocess.train_test_split()
         except Exception as e:
-            self.logger.exception(f'Error occurred at preprocessing the data. Reason:{e}')
+            self.logger.exception(f'Error occurred at splitting  the data. Reason:{e}')
             raise
 
     def model_build_and_train(self):
-        self.model_compile = SpamClassifierTrainer()
-        self.model_compile.build_model()
-        self.model=self.model_compile()
-
-
+        try:
+            self.preprocess = PreProcess(self.logger, self.config_reader, self.texts, self.labels)
+            vocab_sz, e = self.preprocess.get_embedding_matrix()
+            _, max_seq_len = self.preprocess.get_sequence()
+            model_compile = SpamClassifierTrainer(self.logger, self.config_reader, vocab_sz, 300,
+                                                  max_seq_len, 256, 3, 2,
+                                                  'scratch', e)
+            model_compile.build_model()
+            self.model = model_compile.compile_model()
+        except Exception as e:
+            self.logger.exception(f'Error occurred at building the mode. Reason:{e}')
+            raise
 
 
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
-from model_classifier import SpamClassifierCNN
+from model.model_classifier import SpamClassifierCNN
 
 
 class SpamClassifierTrainer(SpamClassifierCNN):
@@ -24,7 +24,7 @@ class SpamClassifierTrainer(SpamClassifierCNN):
             self.kernel_size = self.label_section.get('conv_kernal_size')
             self.optimizer = self.label_section.get('optimizer')
             self.loss = self.label_section.get('loss')
-            self.metrics = self.label_section.get('metrics')
+            self.model_metrics = self.label_section.get('model_metrics')
             self.model = SpamClassifierCNN(self.logger, self.config_reader, self.vocab_sz, self.embed_sz,
                                            self.input_length,
                                            self.num_filters, self.kernel_sz, self.output_sz, self.run_mode,
@@ -34,12 +34,23 @@ class SpamClassifierTrainer(SpamClassifierCNN):
             self.logger.exception(f'Error: Failed to create the model instance.Reason: {e}')
             raise
 
-    def build_model(self, max_seqlen):
-        self.model.build(input_shape=(None, max_seqlen))
-        self.logger.info('***************Model Summary***************')
-        self.logger.info(self.model.summary())
+    def build_model(self):
+        try:
+            self.logger.info('Inside Build Model..')
+            self.logger.info(self.input_length)
+            self.model.build(input_shape=(None, self.input_length))
+            self.logger.info('***************Model Summary***************')
+            self.logger.info(self.model.summary())
+        except Exception as e:
+            self.logger.exception(f'Error: Failed to build the model.Reason: {e}')
+            raise
 
     def compile_model(self):
-        self.logger.info('Inside Compile Model..')
-        self.model.compile(optimizer=self.optimizer, loss=self.loss, metrics=[self.metrics])
-        return self.model
+        try:
+            self.logger.info('Inside Compile Model..')
+            self.model.compile(optimizer=self.optimizer, loss=self.loss, metrics=[self.model_metrics])
+            self.logger.info('Model Compiled..')
+            return self.model
+        except Exception as e:
+            self.logger.exception(f'Error: Failed to compile.Reason: {e}')
+            raise

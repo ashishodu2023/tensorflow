@@ -18,6 +18,7 @@ class SpamClassifierCNN(tf.keras.Model):
         self.embedding_weights = embedding_weights
 
         try:
+            self.logger.info('Inside the SpamClassifierCNN..')
             self.label_section = self.config_reader.config['MODEL']
             self.scratch = self.label_section.get('scratch')
             self.vectorizer = self.label_section.get('vectorizer')
