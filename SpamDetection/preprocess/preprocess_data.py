@@ -76,14 +76,9 @@ class PreProcess:
             test_dataset = dataset.take(test_size).batch(int(self.batch_size), drop_remainder=True)
             val_dataset = dataset.skip(test_size).take(val_size).batch(int(self.batch_size), drop_remainder=True)
             train_dataset = dataset.skip(test_size + val_size).batch(int(self.batch_size), drop_remainder=True)
-            X_train = list(map(lambda x: x[0], train_dataset))
-            y_train = list(map(lambda x: x[1], train_dataset))
-            X_val = list(map(lambda x: x[0], val_dataset))
-            y_val = list(map(lambda x: x[1], val_dataset))
-            X_test = list(map(lambda x: x[0], test_dataset))
-            y_test = list(map(lambda x: x[1], test_dataset))
-
-            self.logger.info(f'***********Generated train validation and test datasets**********')
+            X_train,y_train = self.__get_shape(train_dataset)
+            X_val, y_val = self.__get_shape(val_dataset)
+            X_test, y_test = self.__get_shape(test_dataset)
             self.logger.info(f'The shape of train set:{np.asarray(X_train).shape,np.asarray(y_train).shape}')
             self.logger.info(f'The shape of validation set:{np.asarray(X_val).shape,np.asarray(y_val).shape}')
             self.logger.info(f'The shape of test set:{np.asarray(X_test).shape,np.asarray(y_test).shape}')
@@ -91,6 +86,15 @@ class PreProcess:
         except Exception as e:
             self.logger.exception(f'Error: Failed to get train and test samples from dataset.'
                                   f'Reason:Required key {e.args[0]} not found')
+
+    def __get_shape(self,dataset):
+        try:
+            self.logger.info(f'Inside get_shape..')
+            feature = list(map(lambda x:x[0],dataset))
+            label = list(map(lambda x:x[1],dataset))
+            return feature,label
+        except Exception as e:
+            self.logger.exception(f'Error: Failed to get the train and label list.Reason {e}')
 
 
     def get_sequence(self):
