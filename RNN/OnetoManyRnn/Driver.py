@@ -6,13 +6,14 @@ from data.get_book_data import BookData
 
 class Driver:
     def __init__(self):
+        self.idx2char = None
+        self.char2idx = None
         self.book_data = None
         self.model = None
         self.test_dataset = None
         self.val_dataset = None
         self.train_dataset = None
         self.labels = None
-        self.texts = None
         self.logger = None
         self.args = None
         self.config_reader = None
@@ -47,8 +48,8 @@ class Driver:
     def download_data(self):
         try:
             self.book_data = BookData(self.logger, self.config_reader)
-            self.texts = self.book_data.download_and_read()
-            self.logger.info(f'Few characters are {self.texts[1:10]}')
+            self.char2idx, self.idx2char = self.book_data.get_char2idx()
+            return self.char2idx, self.idx2char
         except Exception as e:
             self.logger.exception(f'Error occurred at creating sms download object. Reason:{e}')
             raise
